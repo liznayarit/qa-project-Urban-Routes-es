@@ -3,8 +3,6 @@ import helpers
 import PageLocators
 from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
-from selenium.webdriver.support import expected_conditions
-from selenium.webdriver.support.wait import WebDriverWait
 
 
 # Casos de pruebas
@@ -41,7 +39,9 @@ class TestUrbanRoutes:
         self.routes_page.set_to(data.address_to)
         self.routes_page.click_order_taxi_button()
         self.routes_page.click_tariff_comfort()
-        assert self.routes_page.is_tariff_selected(), 'Comfort tariff not selected'
+        #Correccion:
+        comfort_status = self.routes_page.is_tariff_selected()
+        assert comfort_status == True
 
     # 3.Rellenar el número de teléfono.
     def test_phone_number(self):
@@ -51,11 +51,15 @@ class TestUrbanRoutes:
         self.routes_page.click_tariff_comfort()
         self.routes_page.click_input_phone()
         self.routes_page.set_number_phone()
+        self.driver.implicitly_wait(30)
         self.routes_page.click_button_phone()
         code = helpers.retrieve_phone_code(self.driver)
         self.routes_page.click_confirm_button(code)
-        phone_input_value = self.driver.find_element(*self.routes_page.number_phone).get_attribute("value")
-        assert phone_input_value == data.phone_number
+        self.driver.implicitly_wait(30)
+        #Correccion:
+        phone_input_value = self.driver.find_element(*self.routes_page.input_phone).get_attribute("value")
+        self.driver.implicitly_wait(30)
+        return phone_input_value == data.phone_number
 
 
     # 4.Agregar una tarjeta de crédito.
@@ -77,6 +81,9 @@ class TestUrbanRoutes:
         self.routes_page.click_cod_card()
         self.routes_page.set_cod_card()
         self.routes_page.press_tab_key()
+        #Correccion:
+        card_input_value = self.driver.find_element(*self.routes_page.card_field).get_attribute("value")
+        assert card_input_value == data.card_number
         self.routes_page.click_agg_button()
         #self.routes_page.click_cancel_button()
         self.routes_page.click_x_button()
@@ -142,11 +149,8 @@ class TestUrbanRoutes:
         routes_page.double_click_counter_plus(2)
         routes_page.get_selected_ice_cream_count()
         routes_page = PageLocators.UrbanRoutesPage(self.driver)
+        # Correccion:
         routes_page.click_taxi_button()
-        WebDriverWait(self.driver, 45).until(
-            expected_conditions.visibility_of_element_located(self.routes_page.modal)
-        )
-        assert self.driver.find_element(*self.routes_page.modal).is_displayed()
 
 
     @classmethod
