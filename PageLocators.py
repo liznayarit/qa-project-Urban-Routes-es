@@ -16,8 +16,8 @@ class UrbanRoutesPage:
 
     # 2.Seleccionar la tarifa Comfort.
     order_taxi = (By.XPATH, "//button[text()='Pedir un taxi']")
-    comfort_button = (By.XPATH, "//div[@class='tcard-title' and normalize-space()='Comfort']")
-
+    # Correccion:
+    comfort_button = (By.XPATH, "//div[@class='tcard-title'][contains(.,'Comfort')]")
 
     # 3.Rellenar el número de teléfono.
     input_phone = (By.CLASS_NAME, 'np-text')
@@ -77,8 +77,8 @@ class UrbanRoutesPage:
 
     # 2.Seleccionar la tarifa Comfort.
     def click_order_taxi_button(self):
-       # WebDriverWait(self.driver, 20).until(
-        #    EC.element_to_be_clickable((By.CSS_SELECTOR, '.button.round')))
+        WebDriverWait(self.driver, 20).until(
+           EC.element_to_be_clickable(self.order_taxi))
         self.driver.find_element(*self.order_taxi).click()
 
     def click_tariff_comfort(self):
@@ -87,11 +87,7 @@ class UrbanRoutesPage:
       comfort_tariff_button.click()
 
     def is_tariff_selected(self):
-        try:
-            self.driver.find_element(*self.comfort_button)
-            return True
-        except:
-            return False
+        return self.driver.find_element(*self.comfort_button).is_enabled()
 
     # 3.Rellenar el número de teléfono.
     def click_input_phone(self):
@@ -107,6 +103,8 @@ class UrbanRoutesPage:
         self.driver.find_element(*self.sms_code).send_keys(code)
 
     def click_confirm_button(self, code):
+        WebDriverWait(self.driver, 50).until(
+            EC.element_to_be_clickable(self.comfort_button))
         self.driver.find_element(*self.confirm_button).click()
 
 
@@ -148,9 +146,6 @@ class UrbanRoutesPage:
     def click_agg_button(self):
         self.driver.find_element(*self.agg_button).click()
 
-    #def click_cancel_button(self):
-     #   self.driver.find_element(*self.cancel_button).click()
-
     def click_x_button(self):
         self.driver.find_element(*self.x_button).click()
 
@@ -165,7 +160,6 @@ class UrbanRoutesPage:
     # 6.Pedir una manta y pañuelos
     def click_req_button(self):
         self.driver.find_element(*self.req_button).click()
-
 
     # 7.Pedir 2 helados
     def click_ice_cream_counter(self):
@@ -185,15 +179,9 @@ class UrbanRoutesPage:
 
     # 8.Aparece el modal para buscar un taxi
     def click_taxi_button(self):
-        WebDriverWait(self.driver, 10).until(
+        WebDriverWait(self.driver, 50).until(
             EC.visibility_of_element_located((By.CLASS_NAME, 'smart-button-wrapper')))
         self.driver.find_element(*self.taxi_button).click()
-
-    def wait_modal(self):
-        self.driver.find_element(*self.modal)
-
-
-
 
 
 
