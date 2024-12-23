@@ -1,5 +1,6 @@
 # Importa webdriver y la clase By para los localizadores
 import data
+import time
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
@@ -80,11 +81,13 @@ class UrbanRoutesPage:
         WebDriverWait(self.driver, 20).until(
            EC.element_to_be_clickable(self.order_taxi))
         self.driver.find_element(*self.order_taxi).click()
+        time.sleep(1)
 
     def click_tariff_comfort(self):
       comfort_tariff_button = WebDriverWait(self.driver, 50).until(
           EC.element_to_be_clickable(self.comfort_button))
       comfort_tariff_button.click()
+      time.sleep(5)
 
     def is_tariff_selected(self):
         return self.driver.find_element(*self.comfort_button).is_enabled()
@@ -92,6 +95,7 @@ class UrbanRoutesPage:
     # 3.Rellenar el número de teléfono.
     def click_input_phone(self):
         self.driver.find_element(*self.input_phone).click()
+        time.sleep(2)
 
     def set_number_phone(self):
         self.driver.find_element(*self.number_phone).send_keys(data.phone_number)
@@ -101,6 +105,7 @@ class UrbanRoutesPage:
 
     def set_sms_code(self, code):
         self.driver.find_element(*self.sms_code).send_keys(code)
+        time.sleep(2)
 
     def click_confirm_button(self, code):
         WebDriverWait(self.driver, 50).until(
